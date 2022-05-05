@@ -1,0 +1,15 @@
+{
+    "name": "vicoders/test-post-manage",
+    "description": "learn pakage laravel",
+    "autoload": {
+        "psr-4": {
+            "VCComponent\\Laravel\\TestPostManage\\": "src/app"
+        }
+    },
+    "authors": [
+        {
+            "name": "truongvuongquat"
+        }
+    ],
+    "require": {}
+}
