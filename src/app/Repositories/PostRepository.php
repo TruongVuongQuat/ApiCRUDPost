@@ -13,7 +13,7 @@ class PostRepository implements PostInterface
 
     public function show($id)
     {
-        return Post::find($id);
+        return Post::where('id', $id)->get();
     }
 
     public function store(array $data)

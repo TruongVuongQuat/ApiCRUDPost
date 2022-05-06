@@ -62,13 +62,9 @@ class PostController extends Controller
     public function show($id)
     {
         $post = $this->post->show($id);
-        return response()->json(
-            [
-                'status' => true,
-                'data' => $post,
-                'message' => 'OK'
-            ]
-        );
+        $post = new Collection($post, $this->postTransformer);
+        $post = $this->fractal->createData($post);
+        return $post->toArray();
     }
 
     /**
