@@ -4,10 +4,25 @@ namespace VCComponent\Laravel\TestPostManage\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use VCComponent\Laravel\TestPostManage\Models\Post;
+use VCComponent\Laravel\TestPostManage\Repositories\PostInterface;
+use VCComponent\Laravel\TestPostManage\Transformers\PostTransformer;
+use League\Fractal\Manager;
+use League\Fractal\Resource\Collection;
+use League\Fractal\Resource\ResourceInterface;
 
 class PostController extends Controller
 {
+
+    protected $post;
+    protected $postTransformer;
+    protected $fractal;
+
+    public function __construct(PostInterface $postInterface, Manager $fractal, PostTransformer $postTransformer)
+    {
+        $this->post = $postInterface;
+        $this->postTransformer = $postTransformer;
+        $this->fractal = $fractal;
+    }
     /**
      * Display a listing of the resource.
      *
@@ -15,9 +30,11 @@ class PostController extends Controller
      */
     public function index()
     {
-        return Post::all();
+        $posts = $this->post->all();
+        $posts = new Collection($posts, $this->postTransformer);
+        $posts = $this->fractal->createData($posts);
+        return $posts->toArray();
     }
-
     /**
      * Store a newly created resource in storage.
      *
@@ -26,7 +43,14 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        return Post::create($request->all());
+        $post = $this->post->store($request->all());
+        return response()->json(
+            [
+                'status' => true,
+                'data' => $post,
+                'message' => 'OK'
+            ]
+        );
     }
 
     /**
@@ -37,7 +61,14 @@ class PostController extends Controller
      */
     public function show($id)
     {
-        return Post::find($id);
+        $post = $this->post->show($id);
+        return response()->json(
+            [
+                'status' => true,
+                'data' => $post,
+                'message' => 'OK'
+            ]
+        );
     }
 
     /**
@@ -49,8 +80,14 @@ class PostController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $post = Post::find($id);
-        return $post->update($request->all());
+        $post = $this->post->update($id, $request->all());
+        return response()->json(
+            [
+                'status' => true,
+                'data' => $post,
+                'message' => 'update success'
+            ]
+        );
     }
 
     /**
@@ -61,7 +98,13 @@ class PostController extends Controller
      */
     public function destroy($id)
     {
-        $post = Post::find($id);
-        return $post->delete();
+        $post = $this->post->destroy($id);
+        return response()->json(
+            [
+                'status' => true,
+                'data' => $post,
+                'message' => 'Delete success'
+            ]
+        );
     }
 }
