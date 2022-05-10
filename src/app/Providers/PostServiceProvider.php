@@ -5,6 +5,7 @@ namespace VCComponent\Laravel\TestPostManage\Providers;
 use Illuminate\Support\ServiceProvider;
 use VCComponent\Laravel\TestPostManage\Repositories\PostInterface;
 use VCComponent\Laravel\TestPostManage\Repositories\PostRepository;
+use VCComponent\Laravel\TestPostManage\Tests\TestCase;
 
 class PostServiceProvider extends ServiceProvider
 {
@@ -26,6 +27,7 @@ class PostServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->loadRoutesFrom(__DIR__ . '/../../routes/api.php');
+        $this->loadRoutesFrom(__DIR__ . '/../../routes/web.php');
         $this->loadMigrationsFrom(__DIR__ . '/../../database/migrations');
     }
 }

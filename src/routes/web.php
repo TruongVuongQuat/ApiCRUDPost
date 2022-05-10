@@ -13,3 +13,7 @@ use VCComponent\Laravel\TestPostManage\Http\Controllers\TestController;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+Route::get('/home', function () {
+    return 'home';
+});

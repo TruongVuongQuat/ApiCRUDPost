@@ -2,13 +2,12 @@
 
 namespace VCComponent\Laravel\TestPostManage\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
 use VCComponent\Laravel\TestPostManage\Repositories\PostInterface;
 use VCComponent\Laravel\TestPostManage\Transformers\PostTransformer;
 use League\Fractal\Manager;
 use League\Fractal\Resource\Collection;
-use League\Fractal\Resource\ResourceInterface;
 
 class PostController extends Controller
 {
