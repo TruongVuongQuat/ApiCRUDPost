@@ -13,7 +13,8 @@ class PostTransformer extends TransformerAbstract
             'id' => $post->id,
             'title' => $post->title,
             'description' => $post->description,
-            'content' => $post->content
+            'content' => $post->content,
+            'status' => $post->status
         ];
     }
 }

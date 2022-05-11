@@ -23,11 +23,23 @@ class PostRepository implements PostInterface
 
     public function update($id, array $data)
     {
-        return Post::where('id', $id)->update($data);
+        Post::where('id', $id)->update($data);
+        $post = Post::find($id);
+        return $post;
     }
 
     public function destroy($id)
     {
-        return Post::destroy($id);
+        return Post::find($id)->delete();
+    }
+
+    public function search($post)
+    {
+        return Post::where('title', 'like', '%' . $post . '%')->get();
+    }
+
+    public function filter_status($status)
+    {
+        return Post::where('status', $status)->get();
     }
 }

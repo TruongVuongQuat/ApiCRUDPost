@@ -13,4 +13,8 @@ interface PostInterface
     public function update($id, array $data);
 
     public function destroy($id);
+
+    public function search($post);
+
+    public function filter_status($status);
 }

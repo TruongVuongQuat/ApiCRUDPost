@@ -19,4 +19,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::resource('api/posts', PostController::class);
+Route::get('api/posts', [PostController::class, 'index']);
+Route::get('api/posts-filter/{status}', [PostController::class, 'filter_status']);
+Route::get('api/posts/{id}', [PostController::class, 'show']);
+Route::post('api/posts', [PostController::class, 'store']);
+Route::post('api/posts/{id}', [PostController::class, 'update']);
+Route::delete('api/posts/{id}', [PostController::class, 'destroy']);
+Route::get('api/search/{post}', [PostController::class, 'search']);

@@ -4,10 +4,12 @@ namespace VCComponent\Laravel\TestPostManage\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Validator;
 use VCComponent\Laravel\TestPostManage\Repositories\PostInterface;
 use VCComponent\Laravel\TestPostManage\Transformers\PostTransformer;
 use League\Fractal\Manager;
 use League\Fractal\Resource\Collection;
+use VCComponent\Laravel\TestPostManage\Models\Post;
 
 class PostController extends Controller
 {
@@ -42,10 +44,26 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
+        $rules = [
+            'title' => 'required|unique:posts,title|max:255',
+            'description' => 'required',
+            'content' => 'required',
+            'status' => 'required',
+        ];
+        $validator = Validator::make($request->all(), $rules);
+        if ($validator->fails()) {
+            return response()->json(
+                [
+                    'status' => 400,
+                    'data' => $request->all(),
+                    'message' => $validator->errors()
+                ]
+            );
+        }
         $post = $this->post->store($request->all());
         return response()->json(
             [
-                'status' => true,
+                'status' => 200,
                 'data' => $post,
                 'message' => 'OK'
             ]
@@ -60,10 +78,21 @@ class PostController extends Controller
      */
     public function show($id)
     {
-        $post = $this->post->show($id);
-        $post = new Collection($post, $this->postTransformer);
-        $post = $this->fractal->createData($post);
-        return $post->toArray();
+        $checkPost = Post::find($id);
+        if (isset($checkPost->id)) {
+            $post = $this->post->show($id);
+            $post = new Collection($post, $this->postTransformer);
+            $post = $this->fractal->createData($post);
+            return $post->toArray();
+        } else {
+            return response()->json(
+                [
+                    'status' => 404,
+                    'data' => [],
+                    'message' => 'Post not found!'
+                ]
+            );
+        }
     }
 
     /**
@@ -75,10 +104,26 @@ class PostController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $rules = [
+            'title' => 'required|unique:posts,title,' . $id . '|max:255',
+            'description' => 'required',
+            'content' => 'required',
+            'status' => 'required',
+        ];
+        $validator = Validator::make($request->all(), $rules);
+        if ($validator->fails()) {
+            return response()->json(
+                [
+                    'status' => 400,
+                    'data' => $request->all(),
+                    'message' => $validator->errors()
+                ]
+            );
+        }
         $post = $this->post->update($id, $request->all());
         return response()->json(
             [
-                'status' => true,
+                'status' => 200,
                 'data' => $post,
                 'message' => 'update success'
             ]
@@ -93,13 +138,40 @@ class PostController extends Controller
      */
     public function destroy($id)
     {
-        $post = $this->post->destroy($id);
-        return response()->json(
-            [
-                'status' => true,
-                'data' => $post,
-                'message' => 'Delete success'
-            ]
-        );
+        $checkPost = Post::find($id);
+        if (isset($checkPost->id)) {
+            $post = $this->post->destroy($id);
+            return response()->json(
+                [
+                    'status' => 200,
+                    'data' => $checkPost,
+                    'message' => 'Delete success'
+                ]
+            );
+        } else {
+            return response()->json(
+                [
+                    'status' => 404,
+                    'data' => $checkPost,
+                    'message' => 'Post not found'
+                ]
+            );
+        }
+    }
+
+    public function search($post)
+    {
+        $posts = $this->post->search($post);
+        $posts = new Collection($posts, $this->postTransformer);
+        $posts = $this->fractal->createData($posts);
+        return $posts->toArray();
+    }
+
+    public function filter_status($status)
+    {
+        $posts = $this->post->filter_status($status);
+        $posts = new Collection($posts, $this->postTransformer);
+        $posts = $this->fractal->createData($posts);
+        return $posts->toArray();
     }
 }
