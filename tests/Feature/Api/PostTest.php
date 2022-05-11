@@ -31,7 +31,7 @@ class PostTest extends TestCase
             'status' => 1,
         ];
         $this->withExceptionHandling();
-        $response = $this->call('POST', 'api/posts')->assertStatus(200);
+        $response = $this->call('POST', 'api/posts', $formData)->assertStatus(200);
         $response->assertJson(['data' => $formData]);
     }
 
