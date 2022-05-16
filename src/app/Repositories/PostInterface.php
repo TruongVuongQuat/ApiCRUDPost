@@ -17,4 +17,6 @@ interface PostInterface
     public function search($post);
 
     public function filter_status($status);
+
+    public function search_and_filter_status($search, $status);
 }

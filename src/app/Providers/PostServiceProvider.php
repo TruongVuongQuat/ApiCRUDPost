@@ -5,7 +5,6 @@ namespace VCComponent\Laravel\TestPostManage\Providers;
 use Illuminate\Support\ServiceProvider;
 use VCComponent\Laravel\TestPostManage\Repositories\PostInterface;
 use VCComponent\Laravel\TestPostManage\Repositories\PostRepository;
-use VCComponent\Laravel\TestPostManage\Tests\TestCase;
 
 class PostServiceProvider extends ServiceProvider
 {

@@ -31,10 +31,27 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = $this->post->all();
-        $posts = new Collection($posts, $this->postTransformer);
-        $posts = $this->fractal->createData($posts);
-        return $posts->toArray();
+        if (isset($_GET['search']) && isset($_GET['status'])) {
+            $posts = $this->post->search_and_filter_status($_GET['search'], $_GET['status']);
+            $posts = new Collection($posts, $this->postTransformer);
+            $posts = $this->fractal->createData($posts);
+            return $posts->toArray();
+        } else if (isset($_GET['search'])) {
+            $posts = $this->post->search($_GET['search']);
+            $posts = new Collection($posts, $this->postTransformer);
+            $posts = $this->fractal->createData($posts);
+            return $posts->toArray();
+        } else if (isset($_GET['status'])) {
+            $posts = $this->post->filter_status($_GET['status']);
+            $posts = new Collection($posts, $this->postTransformer);
+            $posts = $this->fractal->createData($posts);
+            return $posts->toArray();
+        } else {
+            $posts = $this->post->all();
+            $posts = new Collection($posts, $this->postTransformer);
+            $posts = $this->fractal->createData($posts);
+            return $posts->toArray();
+        }
     }
     /**
      * Store a newly created resource in storage.
@@ -157,21 +174,5 @@ class PostController extends Controller
                 ]
             );
         }
-    }
-
-    public function search($post)
-    {
-        $posts = $this->post->search($post);
-        $posts = new Collection($posts, $this->postTransformer);
-        $posts = $this->fractal->createData($posts);
-        return $posts->toArray();
-    }
-
-    public function filter_status($status)
-    {
-        $posts = $this->post->filter_status($status);
-        $posts = new Collection($posts, $this->postTransformer);
-        $posts = $this->fractal->createData($posts);
-        return $posts->toArray();
     }
 }
