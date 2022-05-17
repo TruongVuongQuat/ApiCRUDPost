@@ -3,7 +3,8 @@
     "description": "learn pakage laravel",
     "autoload": {
         "psr-4": {
-            "VCComponent\\Laravel\\TestPostManage\\": "src/app"
+            "VCComponent\\Laravel\\TestPostManage\\": "src/app",
+            "VCComponent\\Laravel\\TestPostManage\\Database\\Factories\\": "src/database/factories"
         }
     },
     "autoload-dev": {

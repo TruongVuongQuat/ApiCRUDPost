@@ -26,7 +26,7 @@ class TestCase extends TestbenchTestCase
         $app['config']->set('database.default', 'mysql');
         $app['config']->set('database.connections.mysql', [
             'driver'   => 'mysql',
-            'database' => 'post_manage',
+            'database' => 'test_post_management',
             'prefix'   => '',
             'username' => 'root',
             'host' => '127.0.0.1'

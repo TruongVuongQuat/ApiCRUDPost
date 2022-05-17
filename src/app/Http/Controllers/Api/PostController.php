@@ -71,10 +71,10 @@ class PostController extends Controller
         if ($validator->fails()) {
             return response()->json(
                 [
-                    'status' => 400,
                     'data' => $request->all(),
-                    'message' => $validator->errors()
-                ]
+                    'message' => 'The given data was invalid.'
+                ],
+                422
             );
         }
         $post = $this->post->store($request->all());
@@ -82,7 +82,7 @@ class PostController extends Controller
             [
                 'status' => 200,
                 'data' => $post,
-                'message' => 'OK'
+                'message' => 'Create success'
             ]
         );
     }
@@ -104,10 +104,10 @@ class PostController extends Controller
         } else {
             return response()->json(
                 [
-                    'status' => 404,
                     'data' => [],
                     'message' => 'Post not found!'
-                ]
+                ],
+                404
             );
         }
     }
@@ -131,20 +131,29 @@ class PostController extends Controller
         if ($validator->fails()) {
             return response()->json(
                 [
-                    'status' => 400,
                     'data' => $request->all(),
-                    'message' => $validator->errors()
-                ]
+                    'message' => 'The given data was invalid.'
+                ],
+                422
             );
         }
         $post = $this->post->update($id, $request->all());
-        return response()->json(
-            [
-                'status' => 200,
-                'data' => $post,
-                'message' => 'update success'
-            ]
-        );
+        if (isset($post)) {
+            return response()->json(
+                [
+                    'data' => $post,
+                    'message' => 'update success'
+                ]
+            );
+        } else {
+            return response()->json(
+                [
+                    'data' => $post,
+                    'message' => 'posts not found'
+                ],
+                404
+            );
+        }
     }
 
     /**
@@ -160,18 +169,19 @@ class PostController extends Controller
             $post = $this->post->destroy($id);
             return response()->json(
                 [
-                    'status' => 200,
                     'data' => $checkPost,
-                    'message' => 'Delete success'
+                    'message' => 'Delete success',
+                    'success' => true
                 ]
             );
         } else {
             return response()->json(
                 [
-                    'status' => 404,
                     'data' => $checkPost,
-                    'message' => 'Post not found'
-                ]
+                    'message' => 'posts not found',
+                    'success' => false,
+                ],
+                400
             );
         }
     }

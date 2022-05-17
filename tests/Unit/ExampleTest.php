@@ -3,16 +3,24 @@
 namespace VCComponent\Laravel\TestPostManage\Tests\Unit;
 
 use VCComponent\Laravel\TestPostManage\Tests\TestCase;
+use VCComponent\Laravel\TestPostManage\Models\Post;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class ExampleTest extends TestCase
 {
-    /**
-     * A basic test example.
-     *
-     * @return void
-     */
-    public function test_that_true_is_true()
+    use RefreshDatabase;
+
+    /** @test */
+    function a_post_has_a_title()
     {
-        $this->assertTrue(true);
+        $post = Post::factory()->create(['title' => 'Fake Title']);
+        $this->assertEquals('Fake Title', $post->title);
+    }
+
+    /** @test */
+    function a_post_has_a_body()
+    {
+        $post = Post::factory()->create(['content' => 'Fake content']);
+        $this->assertEquals('Fake content', $post->content);
     }
 }

@@ -45,6 +45,7 @@ class PostRepository implements PostInterface
         return Post::where('status', $status)->get();
     }
 
+
     public function search_and_filter_status($search, $status)
     {
         return Post::where([
