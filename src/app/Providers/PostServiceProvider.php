@@ -5,6 +5,7 @@ namespace VCComponent\Laravel\TestPostManage\Providers;
 use Illuminate\Support\ServiceProvider;
 use VCComponent\Laravel\TestPostManage\Repositories\PostInterface;
 use VCComponent\Laravel\TestPostManage\Repositories\PostRepository;
+use VCComponent\Laravel\TestPostManage\Providers\EventServiceProvider;
 
 class PostServiceProvider extends ServiceProvider
 {
@@ -16,6 +17,7 @@ class PostServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->bind(PostInterface::class, PostRepository::class);
+        $this->app->register(EventServiceProvider::class);
     }
 
     /**

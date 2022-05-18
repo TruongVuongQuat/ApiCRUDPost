@@ -9,6 +9,9 @@ use VCComponent\Laravel\TestPostManage\Repositories\PostInterface;
 use VCComponent\Laravel\TestPostManage\Transformers\PostTransformer;
 use League\Fractal\Manager;
 use League\Fractal\Resource\Collection;
+use VCComponent\Laravel\TestPostManage\Events\PostCreatedEvent;
+use VCComponent\Laravel\TestPostManage\Events\PostDeletedEvent;
+use VCComponent\Laravel\TestPostManage\Events\PostUpdatedEvent;
 use VCComponent\Laravel\TestPostManage\Models\Post;
 
 class PostController extends Controller
@@ -78,9 +81,9 @@ class PostController extends Controller
             );
         }
         $post = $this->post->store($request->all());
+        event(new PostCreatedEvent($post));
         return response()->json(
             [
-                'status' => 200,
                 'data' => $post,
                 'message' => 'Create success'
             ]
@@ -139,6 +142,7 @@ class PostController extends Controller
         }
         $post = $this->post->update($id, $request->all());
         if (isset($post)) {
+            event(new PostUpdatedEvent($post));
             return response()->json(
                 [
                     'data' => $post,
@@ -167,6 +171,7 @@ class PostController extends Controller
         $checkPost = Post::find($id);
         if (isset($checkPost->id)) {
             $post = $this->post->destroy($id);
+            event(new PostDeletedEvent($checkPost));
             return response()->json(
                 [
                     'data' => $checkPost,
